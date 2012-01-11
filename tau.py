@@ -38,7 +38,7 @@ sys_torrent_path = 'c:/users/myname/appdata/utorrent/'
 # Path to folder with .torrent files
 torrent_path = 'c:/torrents/'
 # Path to autoload folder of uTorrent
-autoload_path = 'c:/torrents/autoload'
+autoload_path = 'c:/torrents/autoload/'
 swOn = 5
 swOff = 2
 
@@ -62,7 +62,7 @@ def torrentDict(torr_path):
     ''' Get a dict "name":"hash" from resume.dat. '''
 
     Dict = {}
-    with open(u'{0}/resume.dat'.format(torr_path), 'rb') as resume:
+    with open(u'{0}resume.dat'.format(torr_path), 'rb') as resume:
         t = bdecode(resume.read())
     for name in t:
         if name != '.fileguard' and name != 'rec':
@@ -112,7 +112,7 @@ while swOn > swOff:
         if scrp == 'd5:filesdee':
             print 'File {0} not register on the tracker'.format(key.rstrip('.torrent'))
             try:
-                with open('{0}/{1}'.format(torrent_path, key), 'rb') as torrent_file:
+                with open('{0}{1}'.format(torrent_path, key), 'rb') as torrent_file:
                     torrent = bdecode(torrent_file.read())
                     t_id = torrent['comment'][36:]
                 brhead = authentication(username, password)
@@ -120,8 +120,8 @@ while swOn > swOff:
                 with open('{0}.torrent'.format(t_id),'wb') as torrent_file:
                     torrent_file.write(torrent)
                 # Remove the old file and move new file to a autoload folder
-                remove('{0}/{1}'.format(torrent_path, key))
-                move('{0}.torrent'.format(t_id), '{0}/{1}.torrent'.format(autoload_path,t_id))
+                remove('{0}{1}'.format(torrent_path, key))
+                move('{0}.torrent'.format(t_id), '{0}{1}.torrent'.format(autoload_path,t_id))
                 print 'Torrent was updated'
             except IOError:
                 pass
