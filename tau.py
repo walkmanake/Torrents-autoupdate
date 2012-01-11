@@ -23,10 +23,10 @@ ut_port = '12345'
 ut_username = 'utusername'
 ut_password = 'utpassword'
 site = 'http://example.com/'
-scrape_body = site + 'scrape.php?info_hash='  # URL scrape-запроса.
+scrape_body = site + 'scrape.php?info_hash='  # URL of scrape-request.
 login_url = site + 'takelogin.php'
 torrent_body = site + 'download.php?id={0}&name={0}.torrent'
-announce = site + 'announce.php?'  # URL анонса трекера.
+announce = site + 'announce.php?'  # URL of tracker announce.
 webui_url = 'http://127.0.0.1:{0}/gui/'.format(ut_port)
 webui_token = webui_url + 'token.html'
 swOn = 5
