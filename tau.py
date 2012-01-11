@@ -49,7 +49,7 @@ def authentication(username, password):
     data = {'username': username, 'password': password}
     headers = {'Content-type': 'application/x-www-form-urlencoded' ,
     'User-agent':'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.0.6'}
-    resp, login = http.request(loginUrl, 'POST', headers=headers, body=urlencode(data))
+    resp, login = http.request(login_url, 'POST', headers=headers, body=urlencode(data))
     cookiekeys = ['uid', 'pass', 'PHPSESSID', 'pass_hash', 'session_id']
     split_resp = resp['set-cookie'].split(' ')
     lst = []
@@ -69,7 +69,7 @@ def torrentDict(torr_path):
         if name != '.fileguard' and name != 'rec':
             for tracker in t[name]['trackers']:
                 if isinstance(tracker, str) and tracker.startswith(announce):
-                    Dict[name.lstrip('torrent\\')] = bta(t[name]['info'])
+                    Dict[name.split('\\')[-1]] = bta(t[name]['info'])
     return Dict
 
 
@@ -114,8 +114,8 @@ while swOn > swOff:
             print 'File {0} not register on the tracker'.format(key.rstrip('.torrent'))
             try:
                 with open('{0}/{1}'.format(torrent_path, key), 'rb') as torrent_file:
-                    torrent = bdecode(trrFile.read())
-                    t_id = t['comment'][36:]
+                    torrent = bdecode(torrent_file.read())
+                    t_id = torrent['comment'][36:]
                 brhead = authentication(username, password)
                 resp, torrent = http.request(torrent_body.format(t_id), 'GET', headers=brhead)
                 with open('{0}.torrent'.format(t_id),'wb') as torrent_file:
