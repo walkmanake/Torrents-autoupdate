@@ -5,8 +5,8 @@ Torrents AutoUpdate
 This script updates the old torrents
 '''
 
-import time
 import urllib2
+from time import sleep
 from shutil import move
 from os import remove
 from urllib import urlencode
@@ -34,14 +34,13 @@ swOff = 2
 #ut-fake headers, need for scrape request, browsers user-agent will banned
 uthead = {'User-Agent':'uTorrent/2210(21304)'}
 # Path to uTorrent's files folder (need to get a resume.dat)
-sys_torrent_path = 'C:/Program Files/uTorrent'
+sys_torrent_path = 'c:/users/myname/appdata/utorrent/'
 # Path to folder with .torrent files
 torrent_path = 'c:/torrents/'
 # Path to autoload folder of uTorrent
 autoload_path = 'c:/torrents/autoload'
 swOn = 5
 swOff = 2
-sleeping = 300
 
 def authentication(username, password):
     ''' Authorization for the site and return cookies. '''
@@ -89,10 +88,10 @@ def uTWebUI(ut_name, ut_passw):
     passw = req.unredirected_hdrs['Authorization']
     return passw, token
 
-def webuiActions(torrent_hash, action, pw, token):
+def webuiActions(torrent_hash, action, password, token):
     ''' uTorrent WebUI actions. '''
 
-    head = {'Authorization': pw}
+    head = {'Authorization': password}
     if action == 'remove':
         action_req = '?token={0}&action=remove&hash={1}'.format(token, torrent_hash)
         r, act = http.request(webui_url+action_req, headers=head)
@@ -100,15 +99,15 @@ def webuiActions(torrent_hash, action, pw, token):
 
 #main cycle
 while swOn > swOff:
-    print 'Cycle'
-    startTime = time.time()
     main_dict = torrentDict(sys_torrent_path)
-    delay = sleeping*0.8/len(main_dict)
+	# Delay 300 sec. It isn't necessary.
+    sleep(300)
     for key in main_dict:
         lst = []
         scrp_str = ''
         for i in range(0, len(main_dict[key]), 2):
             lst.append('%{0}'.format(main_dict[key][i:i+2].upper()))
+		scrp_stp = ''.join(lst)
         resp, scrp = http.request('{0}{1}'.format(scrape_body, scrp_str), 'GET', headers=uthead)
         if scrp == 'd5:filesdee':
             print 'File {0} not register on the tracker'.format(key.rstrip('.torrent'))
@@ -131,7 +130,4 @@ while swOn > swOff:
                 authkey, token = uTWebUI(ut_username, ut_password)
                 webuiActions(main_dict[key], 'remove', authkey, token)
             except:
-                pass
-    time.sleep(delay)
-    print 'Total: {0}'.format(time.time() - startTime)
-    time.sleep(sleeping*0.2)
+                print 'WebUI is off'
