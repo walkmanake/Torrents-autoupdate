@@ -1,7 +1,10 @@
 ﻿# -*- coding: utf-8 -*-
 '''
-Autoupdate torrents
+Torrents AutoUpdate
+
+This script updates the old torrents
 '''
+
 import time
 import urllib2
 from shutil import move
