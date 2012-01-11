@@ -77,7 +77,7 @@ def uTWebUI(ut_name, ut_passw):
     ''' Get a uTorrent's WebUI password and token. '''
     
     passmgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
-    passmgr.add_password(None, webui_token, uTname, uTpassw)
+    passmgr.add_password(None, webui_token, ut_name, ut_passw)
     authhandler = urllib2.HTTPBasicAuthHandler(passmgr)
     opener = urllib2.build_opener(authhandler)
     urllib2.install_opener(opener)
@@ -106,10 +106,10 @@ while swOn > swOff:
     delay = sleeping*0.8/len(main_dict)
     for key in main_dict:
         lst = []
-        scrpReq = ''
+        scrp_str = ''
         for i in range(0, len(main_dict[key]), 2):
             lst.append('%{0}'.format(main_dict[key][i:i+2].upper()))
-        resp, scrp = http.request('{0}{1}'.format(scrape_body, scrpReq), 'GET', headers=uthead)
+        resp, scrp = http.request('{0}{1}'.format(scrape_body, scrp_str), 'GET', headers=uthead)
         if scrp == 'd5:filesdee':
             print 'File {0} not register on the tracker'.format(key.rstrip('.torrent'))
             try:
@@ -117,7 +117,7 @@ while swOn > swOff:
                     torrent = bdecode(trrFile.read())
                     t_id = t['comment'][36:]
                 brhead = authentication(username, password)
-                resp, torrent = http.request(torrBody.format(t_id), 'GET', headers=brhead)
+                resp, torrent = http.request(torrent_body.format(t_id), 'GET', headers=brhead)
                 with open('{0}.torrent'.format(t_id),'wb') as torrent_file:
                     torrent_file.write(torrent)
                 # Remove the old file and move new file to a autoload folder
