@@ -107,7 +107,7 @@ while swOn > swOff:
         scrp_str = ''
         for i in range(0, len(main_dict[key]), 2):
             lst.append('%{0}'.format(main_dict[key][i:i+2].upper()))
-        scrp_stp = ''.join(lst)
+        scrp_str = ''.join(lst)
         resp, scrp = http.request('{0}{1}'.format(scrape_body, scrp_str), 'GET', headers=uthead)
         if scrp == 'd5:filesdee':
             print 'File {0} not register on the tracker'.format(key.rstrip('.torrent'))
